@@ -59,8 +59,11 @@ function createTile(entry) {
 
   const frameContainer = document.createElement("div");
   frameContainer.className = "tile-frame-container";
-  // Placeholder background so we can see tile shape without iframe.
-  frameContainer.style.background = "linear-gradient(135deg, #ececec, #d8d8d8)";
+  const iframe = document.createElement("iframe");
+  iframe.src = tile.dataset.path;
+  iframe.setAttribute("loading", "lazy");
+  iframe.setAttribute("sandbox", "allow-scripts");
+  frameContainer.appendChild(iframe);
 
   const meta = document.createElement("div");
   meta.className = "tile-meta";
