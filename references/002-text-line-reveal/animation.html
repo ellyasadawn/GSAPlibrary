@@ -4,20 +4,21 @@
 <meta charset="UTF-8">
 <title>Text line reveal</title>
 <style>
-  html, body {
-    margin: 0; height: 100%;
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
     display: flex; align-items: center; justify-content: center;
     background: #fff5e6;
-    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
   .stack {
-    display: flex; flex-direction: column; gap: 10px;
-    width: 72%;
+    display: flex; flex-direction: column;
+    gap: 2.2vmin;
+    width: 65vmin;
   }
   .line {
-    height: 14px;
+    height: 3vmin;
     background: #2a2418;
-    border-radius: 3px;
+    border-radius: 4px;
     will-change: transform, opacity;
   }
   .line.short   { width: 60%; }
@@ -35,21 +36,15 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script>
     const lines = document.querySelectorAll(".line");
-
-    // fromTo is explicit about both states and re-applies "from" on each loop,
-    // which avoids any ambiguity with timeline.set + repeat.
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.4 });
 
     tl.fromTo(lines,
       { y: 36, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.12 }
     )
-    .to({}, { duration: 1.4 })  // hold
+    .to({}, { duration: 1.4 })
     .to(lines, {
-      y: -20,
-      opacity: 0,
-      duration: 0.45,
-      ease: "power2.in",
+      y: -20, opacity: 0, duration: 0.45, ease: "power2.in",
       stagger: { each: 0.05, from: "end" }
     });
   </script>

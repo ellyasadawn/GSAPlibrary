@@ -4,19 +4,19 @@
 <meta charset="UTF-8">
 <title>Card tilt hover</title>
 <style>
-  html, body {
-    margin: 0; height: 100%;
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
     display: flex; align-items: center; justify-content: center;
     background: linear-gradient(135deg, #f4f1ee, #e8e2dc);
     perspective: 600px;
-    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
   .card {
-    width: 70%;
-    aspect-ratio: 1.35 / 1;
+    width: 60vmin;
+    height: 44vmin;
     background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+    border-radius: 16px;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.12);
     transform-style: preserve-3d;
     will-change: transform;
   }
@@ -28,8 +28,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script>
     const card = document.getElementById("card");
-    // Continuous cycle through four corners with a soft ease — no holds, the
-    // ease provides natural pauses at each extreme.
     gsap.timeline({ repeat: -1, defaults: { duration: 0.95, ease: "power2.inOut" } })
       .to(card, { rotationY:  30, rotationX:  18 })
       .to(card, { rotationY: -30, rotationX:  18 })
