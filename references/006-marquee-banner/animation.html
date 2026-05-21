@@ -195,27 +195,41 @@
   const isStandalone = window.self === window.top;
   document.body.classList.add(isStandalone ? "standalone" : "embedded");
 
-  // Always set up the infinite-loop timeline. In embedded mode it just runs.
-  // In standalone mode its timeScale is driven by scroll direction below.
-  const tl = gsap.to("#marquee", {
+  // Infinite horizontal scroll for the marquee container.
+  const marqueeTl = gsap.to("#marquee", {
     xPercent: -50,
     duration: 28,
     ease: "none",
     repeat: -1,
   });
 
+  // Stars continuously rotate. The rotation direction follows the marquee
+  // direction so a flip in scroll direction also flips the spin direction —
+  // this is the bit that makes the response read as fluid instead of mechanical.
+  const stars = document.querySelectorAll(".marquee__star");
+  let targetDir = 1;     // 1 = forward (left drift), -1 = reverse (right drift)
+  let currentDir = 1;    // lerps toward targetDir so reversal feels smooth
+  let starAngle = 0;     // accumulated rotation in degrees
+
+  gsap.ticker.add(() => {
+    const dRatio = gsap.ticker.deltaRatio(); // ~1 at 60fps; ~2 at 30fps
+    // Lerp the direction so changes ease in/out rather than snap.
+    currentDir += (targetDir - currentDir) * 0.06 * dRatio;
+    marqueeTl.timeScale(currentDir);
+    // 60 deg/sec at full speed; mid-flip the stars naturally slow to a stop,
+    // then accelerate the other way.
+    starAngle += currentDir * 1.0 * dRatio;
+    gsap.set(stars, { rotation: starAngle, transformOrigin: "50% 50%" });
+  });
+
   if (isStandalone) {
     let lastY = window.scrollY;
-    let idleTimer = null;
-
     window.addEventListener("scroll", () => {
       const dy = window.scrollY - lastY;
       lastY = window.scrollY;
-      if (dy > 0) tl.timeScale(1);        // down -> forward (drift left)
-      else if (dy < 0) tl.timeScale(-1);  // up   -> reverse  (drift right)
-
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => tl.timeScale(1), 800);
+      if (dy > 0) targetDir = 1;        // down -> forward (drift left, spin CW)
+      else if (dy < 0) targetDir = -1;  // up   -> reverse  (drift right, spin CCW)
+      // No idle reset — direction persists until you scroll the other way.
     }, { passive: true });
   }
 </script>
