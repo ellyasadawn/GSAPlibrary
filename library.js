@@ -146,11 +146,19 @@ function setupSearch() {
 }
 
 function matchesQuery(entry, query) {
-  if (entry.name.toLowerCase().includes(query)) return true;
-  if (entry.notes && entry.notes.toLowerCase().includes(query)) return true;
-  if (entry.category.toLowerCase().includes(query)) return true;
+  const q = query.toLowerCase();
+  if (entry.name.toLowerCase().includes(q)) return true;
+  if (entry.notes && entry.notes.toLowerCase().includes(q)) return true;
+  if (entry.category.toLowerCase().includes(q)) return true;
   return false;
 }
+
+function countByCategory(references, category) {
+  return references.filter(r => r.category === category).length;
+}
+
+// Expose for tests.html
+window.__libraryInternals = { matchesQuery, countByCategory };
 
 function renderSearchResults(query) {
   if (intersectionObserver) intersectionObserver.disconnect();
