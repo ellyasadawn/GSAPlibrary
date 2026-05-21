@@ -133,9 +133,50 @@ function setupLazyMount() {
   document.querySelectorAll(".tile").forEach(t => intersectionObserver.observe(t));
 }
 
+function setupSearch() {
+  const input = document.getElementById("search");
+  input.addEventListener("input", e => {
+    const query = e.target.value.trim().toLowerCase();
+    if (!query) {
+      renderGrid();
+      return;
+    }
+    renderSearchResults(query);
+  });
+}
+
+function matchesQuery(entry, query) {
+  if (entry.name.toLowerCase().includes(query)) return true;
+  if (entry.notes && entry.notes.toLowerCase().includes(query)) return true;
+  if (entry.category.toLowerCase().includes(query)) return true;
+  return false;
+}
+
+function renderSearchResults(query) {
+  if (intersectionObserver) intersectionObserver.disconnect();
+  unmountAllIframes();
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  const matches = REFERENCES.filter(r => matchesQuery(r, query));
+
+  if (matches.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = `No matches for "${query}".`;
+    grid.appendChild(empty);
+    return;
+  }
+
+  matches.forEach(entry => grid.appendChild(createTile(entry)));
+  setupLazyMount();
+}
+
 function init() {
   renderEntryCount();
   renderTabs();
+  setupSearch();
   // Default to first category that has entries; fall back to first category.
   const firstWithEntries = CATEGORIES.find(c => REFERENCES.some(r => r.category === c));
   setActiveCategory(firstWithEntries || CATEGORIES[0]);
