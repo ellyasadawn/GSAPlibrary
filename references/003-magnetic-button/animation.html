@@ -2,13 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Magnetic button (placeholder)</title>
+<title>Magnetic button</title>
 <style>
-  html, body { margin:0; height:100%; display:flex; align-items:center; justify-content:center;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:#e8f0ff; color:#444; font-size:14px;
+  html, body {
+    margin: 0; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: #e8f0ff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+  }
+  .btn {
+    background: #111; color: #fff;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-size: 14px; font-weight: 500;
+    will-change: transform;
+    cursor: pointer;
   }
 </style>
 </head>
-<body>placeholder · 003-magnetic-button</body>
+<body>
+  <div class="btn" id="btn">Click me</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+    const btn = document.getElementById("btn");
+
+    // Self-demo: simulate a cursor approaching from various angles, pulling the
+    // button toward it, then releasing.
+    // Each position holds for a moment so the user can see the "pulled" state.
+    const offsets = [
+      { x:  12, y:  -6 },
+      { x: -12, y:  -6 },
+      { x: -12, y:   6 },
+      { x:  12, y:   6 },
+      { x:   0, y:   0 },  // rest
+    ];
+
+    const tl = gsap.timeline({ repeat: -1, defaults: { ease: "power3.out" } });
+    offsets.forEach(o => {
+      tl.to(btn, { x: o.x, y: o.y, duration: 0.5 })
+        .to({}, { duration: 0.5 });
+    });
+  </script>
+</body>
 </html>
