@@ -76,6 +76,9 @@ function createTile(entry) {
 
 function renderGrid() {
   const grid = document.getElementById("grid");
+  // Release the previous observer before mutating the grid so detached
+  // tiles don't leak as live observed targets.
+  if (intersectionObserver) intersectionObserver.disconnect();
   grid.innerHTML = "";
 
   const entries = REFERENCES.filter(r => r.category === activeCategory);
