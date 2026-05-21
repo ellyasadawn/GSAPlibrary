@@ -2,13 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Text line reveal (placeholder)</title>
+<title>Text line reveal</title>
 <style>
-  html, body { margin:0; height:100%; display:flex; align-items:center; justify-content:center;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:#fff5e6; color:#444; font-size:14px;
+  html, body {
+    margin: 0; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff5e6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
   }
+  .stack {
+    display: flex; flex-direction: column; gap: 10px;
+    width: 75%;
+  }
+  .line {
+    height: 14px;
+    background: #2a2418;
+    border-radius: 3px;
+    will-change: transform, opacity;
+  }
+  .line.short { width: 60%; }
+  .line.shorter { width: 40%; }
 </style>
 </head>
-<body>placeholder · 002-text-line-reveal</body>
+<body>
+  <div class="stack" id="stack">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line short"></div>
+    <div class="line shorter"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+    const lines = document.querySelectorAll(".line");
+
+    // Self-demo: lines stagger in from below, hold, then reset and replay.
+    const tl = gsap.timeline({ repeat: -1, defaults: { ease: "power3.out" } });
+    tl.set(lines, { y: 28, opacity: 0 })
+      .to(lines, { y: 0, opacity: 1, duration: 0.7, stagger: 0.12 })
+      .to({}, { duration: 1.6 })  // hold
+      .to(lines, { opacity: 0, duration: 0.4, stagger: { each: 0.05, from: "end" } })
+      .to({}, { duration: 0.3 }); // pause before loop
+  </script>
+</body>
 </html>
