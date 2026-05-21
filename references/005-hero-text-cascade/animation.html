@@ -2,13 +2,49 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hero text cascade (placeholder)</title>
+<title>Hero text cascade</title>
 <style>
-  html, body { margin:0; height:100%; display:flex; align-items:center; justify-content:center;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:#111; color:#eee; font-size:14px;
+  html, body {
+    margin: 0; height: 100%; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: #0f0f10;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #ffffff;
+  }
+  h1 {
+    font-size: clamp(28px, 6vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    line-height: 1;
+  }
+  .char {
+    display: inline-block;
+    will-change: transform, opacity;
   }
 </style>
 </head>
-<body>placeholder · 005-hero-text-cascade</body>
+<body>
+  <h1 id="title"></h1>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+    const TEXT = "Hello.";
+    const title = document.getElementById("title");
+
+    // Split into character spans (preserving spaces).
+    title.innerHTML = TEXT.split("").map(ch =>
+      ch === " " ? "&nbsp;" : `<span class="char">${ch}</span>`
+    ).join("");
+
+    const chars = document.querySelectorAll(".char");
+
+    const tl = gsap.timeline({ repeat: -1, defaults: { ease: "power4.out" } });
+    tl.set(chars, { y: 80, opacity: 0, rotationX: -60 })
+      .to(chars, { y: 0, opacity: 1, rotationX: 0, duration: 0.9, stagger: 0.06 })
+      .to({}, { duration: 1.4 })
+      .to(chars, { y: -40, opacity: 0, duration: 0.5, stagger: { each: 0.04, from: "end" } })
+      .to({}, { duration: 0.5 });
+  </script>
+</body>
 </html>
