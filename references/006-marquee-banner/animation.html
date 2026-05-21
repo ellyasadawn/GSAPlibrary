@@ -195,41 +195,37 @@
   const isStandalone = window.self === window.top;
   document.body.classList.add(isStandalone ? "standalone" : "embedded");
 
-  const marquee = document.getElementById("marquee");
+  // Mirrors the actual hypefluency.com implementation: an infinite autoplay
+  // timeline whose timeScale is flipped on scroll-direction change. Direction
+  // PERSISTS after scrolling stops — there is no idle reset.
+  const tl = gsap.to("#marquee", {
+    xPercent: -50,
+    duration: 28,
+    ease: "none",
+    repeat: -1,
+  });
 
   if (isStandalone) {
-    // Standalone: the marquee's horizontal position is a pure function of the
-    // page scroll. No autoplay — the strip only moves when you scroll, and
-    // it shifts back the other way when you scroll up. Stop scrolling and
-    // the strip stops. This is what makes the original feel "tactile".
+    let lastY = window.scrollY;
+    let targetScale = 1;   // 1 = drift left, -1 = drift right
+    let currentScale = 1;
 
-    const FACTOR = 1.6; // marquee pixels per pixel of scroll
+    window.addEventListener("scroll", () => {
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      // Counter-flow mapping (matches hypefluency): scrolling DOWN pushes the
+      // marquee to drift RIGHT, scrolling UP pushes it to drift LEFT.
+      if (dy > 0) targetScale = -1;
+      else if (dy < 0) targetScale = 1;
+    }, { passive: true });
 
-    // ((n % m) + m) % m  — JS % can return negative; this keeps it in [0, m).
-    const mod = (n, m) => ((n % m) + m) % m;
-
-    function update() {
-      // offsetWidth of one track (incl. its padding-right) IS the distance the
-      // marquee must travel for the duplicate track to land where it started.
-      const trackWidth = marquee.firstElementChild.offsetWidth;
-      if (!trackWidth) return;
-      const x = -mod(window.scrollY * FACTOR, trackWidth);
-      gsap.set(marquee, { x });
-    }
-
-    // Update on scroll (passive for perf) and once on load after fonts settle.
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("load", update);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
-    update();
-  } else {
-    // Embedded: the iframe can't be scrolled, so fall back to a simple
-    // infinite autoplay loop just to show the effect at a glance.
-    gsap.to(marquee, {
-      xPercent: -50,
-      duration: 28,
-      ease: "none",
-      repeat: -1,
+    // Small lerp on the direction so the reversal feels fluid rather than a
+    // hard snap. Direction persists indefinitely — the lerp just smooths the
+    // transition between persistent states.
+    gsap.ticker.add(() => {
+      const dRatio = gsap.ticker.deltaRatio();
+      currentScale += (targetScale - currentScale) * 0.12 * dRatio;
+      tl.timeScale(currentScale);
     });
   }
 </script>
