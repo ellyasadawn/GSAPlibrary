@@ -56,14 +56,11 @@ function createTile(entry) {
   tile.className = `tile size-${size}`;
   tile.dataset.id = entry.id;
   tile.dataset.path = `references/${entry.id}/animation.html`;
+  tile.dataset.name = entry.name;
 
   const frameContainer = document.createElement("div");
   frameContainer.className = "tile-frame-container";
-  const iframe = document.createElement("iframe");
-  iframe.src = tile.dataset.path;
-  iframe.setAttribute("loading", "lazy");
-  iframe.setAttribute("sandbox", "allow-scripts");
-  frameContainer.appendChild(iframe);
+  // iframe is mounted/unmounted by the IntersectionObserver in setupLazyMount().
 
   const meta = document.createElement("div");
   meta.className = "tile-meta";
@@ -92,6 +89,44 @@ function renderGrid() {
   }
 
   entries.forEach(entry => grid.appendChild(createTile(entry)));
+  setupLazyMount();
+}
+
+let intersectionObserver = null;
+
+function mountIframe(tile) {
+  const container = tile.querySelector(".tile-frame-container");
+  if (!container || container.querySelector("iframe")) return;
+  const iframe = document.createElement("iframe");
+  iframe.src = tile.dataset.path;
+  iframe.title = tile.dataset.name || tile.dataset.id;
+  iframe.setAttribute("sandbox", "allow-scripts");
+  container.appendChild(iframe);
+}
+
+function unmountIframe(tile) {
+  const container = tile.querySelector(".tile-frame-container");
+  if (!container) return;
+  const iframe = container.querySelector("iframe");
+  if (iframe) iframe.remove();
+}
+
+function unmountAllIframes() {
+  document.querySelectorAll(".tile").forEach(unmountIframe);
+}
+
+function setupLazyMount() {
+  if (intersectionObserver) intersectionObserver.disconnect();
+  intersectionObserver = new IntersectionObserver(records => {
+    records.forEach(rec => {
+      if (rec.isIntersecting) {
+        mountIframe(rec.target);
+      } else {
+        unmountIframe(rec.target);
+      }
+    });
+  }, { rootMargin: "200px" });
+  document.querySelectorAll(".tile").forEach(t => intersectionObserver.observe(t));
 }
 
 function init() {
