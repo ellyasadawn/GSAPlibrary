@@ -19,6 +19,16 @@
   <div id="results"></div>
   <div id="summary" class="summary"></div>
 
+  <!-- Hidden stubs so library.js's init() doesn't null-deref on DOMContentLoaded.
+       tests.js runs synchronously and finishes before DOMContentLoaded; init()
+       fires after and would otherwise crash on these element lookups. -->
+  <div style="display:none" aria-hidden="true">
+    <p id="entry-count"></p>
+    <input id="search">
+    <nav id="tab-bar"></nav>
+    <div id="grid"></div>
+  </div>
+
   <!-- Empty REFERENCES — tests don't need the real seed data -->
   <script>window.REFERENCES = [];</script>
   <script src="library.js"></script>
