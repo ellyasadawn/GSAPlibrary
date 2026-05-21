@@ -17,4 +17,5 @@ window.REFERENCES = [
   { id: "003-magnetic-button", name: "Magnetic button", category: "Buttons", size: "1x1", source: "https://example.com", added: "2026-05-21" },
   { id: "004-gradient-breathing", name: "Gradient breathing", category: "Background", size: "fullrow", source: "https://example.com", added: "2026-05-21" },
   { id: "005-hero-text-cascade", name: "Hero text cascade", category: "Hero", size: "fullrow", source: "https://example.com", added: "2026-05-21" },
+  { id: "006-marquee-banner", name: "Marquee banner", category: "Background", size: "fullrow", source: "https://hypefluency.com/en/", added: "2026-05-21" },
 ];

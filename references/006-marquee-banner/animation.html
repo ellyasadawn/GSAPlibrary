@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Marquee banner</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    background: #cbaaf6;
+    display: flex; align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .marquee {
+    display: flex;
+    align-items: center;
+    will-change: transform;
+    flex-shrink: 0;
+  }
+  .marquee__track {
+    display: flex;
+    align-items: center;
+    gap: 4vmin;
+    padding-right: 4vmin;
+    flex-shrink: 0;
+  }
+  .marquee__word {
+    font-size: clamp(20px, 4.2vmin, 56px);
+    font-weight: 800;
+    color: #3d1a6f;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .marquee__star {
+    width: clamp(16px, 3.4vmin, 44px);
+    height: clamp(16px, 3.4vmin, 44px);
+    fill: #3d1a6f;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+  <div class="marquee" id="marquee">
+    <!-- Two identical tracks side-by-side. Sliding the parent left by -50%
+         moves exactly one track's width, swapping track A out and track B
+         into A's old position. Because they are pixel-identical, the loop
+         restart at xPercent:0 is visually invisible -> seamless scroll. -->
+    <div class="marquee__track">
+      <span class="marquee__word">Design</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+      <span class="marquee__word">Motion</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+      <span class="marquee__word">Craft</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+      <span class="marquee__word">Story</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+    </div>
+    <div class="marquee__track" aria-hidden="true">
+      <span class="marquee__word">Design</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+      <span class="marquee__word">Motion</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+      <span class="marquee__word">Craft</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+      <span class="marquee__word">Story</span>
+      <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+    // Linear infinite drift — ease "none" keeps a constant ticker pace.
+    gsap.to("#marquee", {
+      xPercent: -50,
+      duration: 18,
+      ease: "none",
+      repeat: -1,
+    });
+  </script>
+</body>
+</html>
