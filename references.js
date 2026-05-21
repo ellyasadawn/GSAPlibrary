@@ -11,4 +11,10 @@
 //   source    — URL of the original animation (required; ask designer if missing).
 //   added     — ISO date the entry was added.
 //   notes     — optional free text.
-window.REFERENCES = [];
+window.REFERENCES = [
+  { id: "001-card-tilt-hover", name: "Card tilt hover", category: "Cards", size: "1x1", source: "https://example.com", added: "2026-05-21" },
+  { id: "002-text-line-reveal", name: "Text line reveal", category: "Text", size: "1x1", source: "https://example.com", added: "2026-05-21" },
+  { id: "003-magnetic-button", name: "Magnetic button", category: "Buttons", size: "1x1", source: "https://example.com", added: "2026-05-21" },
+  { id: "004-gradient-breathing", name: "Gradient breathing", category: "Background", size: "fullrow", source: "https://example.com", added: "2026-05-21" },
+  { id: "005-hero-text-cascade", name: "Hero text cascade", category: "Hero", size: "2x2", source: "https://example.com", added: "2026-05-21" },
+];
