@@ -39,9 +39,21 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
+const VALID_SIZES = new Set(["1x1", "2x2", "fullrow"]);
+
+function safeHref(url) {
+  try {
+    const parsed = new URL(url);
+    return (parsed.protocol === "https:" || parsed.protocol === "http:") ? url : "#";
+  } catch {
+    return "#";
+  }
+}
+
 function createTile(entry) {
   const tile = document.createElement("div");
-  tile.className = `tile size-${entry.size}`;
+  const size = VALID_SIZES.has(entry.size) ? entry.size : "1x1";
+  tile.className = `tile size-${size}`;
   tile.dataset.id = entry.id;
   tile.dataset.path = `references/${entry.id}/animation.html`;
 
@@ -54,7 +66,7 @@ function createTile(entry) {
   meta.className = "tile-meta";
   meta.innerHTML = `
     <span class="tile-name">${escapeHTML(entry.name)}</span>
-    <a class="tile-source" href="${escapeHTML(entry.source)}" target="_blank" rel="noopener">↗</a>
+    <a class="tile-source" href="${escapeHTML(safeHref(entry.source))}" target="_blank" rel="noopener">↗</a>
   `;
 
   tile.appendChild(frameContainer);
