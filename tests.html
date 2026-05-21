@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Tests</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 24px; background: #fafafa; color: #111; }
+    h1 { font-size: 18px; margin-top: 0; }
+    .test { padding: 6px 10px; border-radius: 6px; margin: 4px 0; font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .pass { background: #e6f6e6; color: #1a6b1a; }
+    .fail { background: #fde6e6; color: #a01515; }
+    .summary { margin-top: 16px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>library.js unit tests</h1>
+  <div id="results"></div>
+  <div id="summary" class="summary"></div>
+
+  <!-- Empty REFERENCES — tests don't need the real seed data -->
+  <script>window.REFERENCES = [];</script>
+  <script src="library.js"></script>
+  <script src="tests.js"></script>
+</body>
+</html>

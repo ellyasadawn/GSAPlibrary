@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Card tilt hover</title>
+<style>
+  html, body {
+    margin: 0; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #f4f1ee, #e8e2dc);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+  }
+  .scene { perspective: 800px; width: 60%; aspect-ratio: 1.2 / 1; }
+  .card {
+    width: 100%; height: 100%;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    transform-style: preserve-3d;
+    will-change: transform;
+    display: flex; align-items: center; justify-content: center;
+    color: #ccc; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="scene"><div class="card" id="card">card</div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+    const card = document.getElementById("card");
+
+    // Self-demo: cycle through a few "cursor positions" on the card to show tilt.
+    // Each position holds for ~700ms, then transitions to the next in ~600ms.
+    const positions = [
+      { rotX:  8, rotY: -12 },
+      { rotX:  8, rotY:  12 },
+      { rotX: -8, rotY:  12 },
+      { rotX: -8, rotY: -12 },
+      { rotX:  0, rotY:   0 },  // rest
+    ];
+
+    const tl = gsap.timeline({ repeat: -1, defaults: { duration: 0.6, ease: "power2.out" } });
+    positions.forEach(p => {
+      tl.to(card, { rotationX: p.rotX, rotationY: p.rotY }).to(card, { duration: 0.7 }); // hold
+    });
+  </script>
+</body>
+</html>
