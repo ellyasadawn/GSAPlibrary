@@ -75,7 +75,7 @@ header { background: var(--surface); border-bottom: 1px solid var(--border); }
 .tile.size-2x2 .tile-frame-container { aspect-ratio: 1 / 1; }
 
 .tile.size-fullrow { grid-column: 1 / -1; }
-.tile.size-fullrow .tile-frame-container { aspect-ratio: 3.2 / 1; }
+.tile.size-fullrow .tile-frame-container { aspect-ratio: 6 / 1; }
 
 .tile-frame-container {
   background: #f0f0f0;

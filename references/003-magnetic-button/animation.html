@@ -13,7 +13,7 @@
   }
   .btn {
     background: #111; color: #fff;
-    padding: 14px 28px;
+    padding: 14px 32px;
     border-radius: 999px;
     font-size: 14px; font-weight: 500;
     will-change: transform;
@@ -28,21 +28,21 @@
   <script>
     const btn = document.getElementById("btn");
 
-    // Self-demo: simulate a cursor approaching from various angles, pulling the
-    // button toward it, then releasing.
-    // Each position holds for a moment so the user can see the "pulled" state.
+    // Self-demo: simulate a cursor approaching from each corner, pulling the
+    // button toward it, then releasing. Bigger pull + slight scale so the
+    // magnetism reads clearly in a small tile.
     const offsets = [
-      { x:  12, y:  -6 },
-      { x: -12, y:  -6 },
-      { x: -12, y:   6 },
-      { x:  12, y:   6 },
-      { x:   0, y:   0 },  // rest
+      { x:  38, y: -20, s: 1.06 },
+      { x: -38, y: -20, s: 1.06 },
+      { x: -38, y:  20, s: 1.06 },
+      { x:  38, y:  20, s: 1.06 },
+      { x:   0, y:   0, s: 1.00 },
     ];
 
     const tl = gsap.timeline({ repeat: -1, defaults: { ease: "power3.out" } });
     offsets.forEach(o => {
-      tl.to(btn, { x: o.x, y: o.y, duration: 0.5 })
-        .to({}, { duration: 0.5 });
+      tl.to(btn, { x: o.x, y: o.y, scale: o.s, duration: 0.55 })
+        .to({}, { duration: 0.55 });
     });
   </script>
 </body>
