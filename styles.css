@@ -99,7 +99,8 @@ header { background: var(--surface); border-bottom: 1px solid var(--border); }
   justify-content: space-between;
   align-items: center;
 }
-.tile-name { font-size: 14px; color: var(--text); }
+.tile-name { font-size: 14px; color: var(--text); text-decoration: none; }
+.tile-name:hover { text-decoration: underline; text-underline-offset: 3px; }
 .tile-source { font-size: 12px; color: var(--text-tertiary); text-decoration: none; }
 .tile-source:hover { color: var(--text); }
 

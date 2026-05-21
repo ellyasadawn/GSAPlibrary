@@ -2,28 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marquee banner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&display=swap" rel="stylesheet">
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
   body {
-    background: #cbaaf6;
-    display: flex; align-items: center;
-    font-family: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f6efff;
+    font-family: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #2d1259;
+    -webkit-font-smoothing: antialiased;
   }
-  .marquee {
-    display: flex;
-    align-items: center;
-    will-change: transform;
-    flex-shrink: 0;
-  }
+
+  /* --- Marquee strip (shown in both modes) --- */
+  .marquee-strip { background: #cbaaf6; overflow: hidden; }
+  .marquee { display: flex; align-items: center; will-change: transform; flex-shrink: 0; }
   .marquee__track {
-    display: flex;
-    align-items: center;
-    gap: 3vw;
-    padding-right: 3vw;
+    display: flex; align-items: center;
+    gap: 3vw; padding-right: 3vw;
     flex-shrink: 0;
   }
   .marquee__word {
@@ -34,7 +33,6 @@
     text-transform: uppercase;
     line-height: 1;
     flex-shrink: 0;
-    /* slight vertical optical nudge so descender-less caps sit center */
     transform: translateY(-0.04em);
   }
   .marquee__star {
@@ -43,13 +41,99 @@
     fill: #3d1a6f;
     flex-shrink: 0;
   }
+
+  /* --- Embedded mode (loaded inside the library iframe) --- */
+  body.embedded { height: 100%; overflow: hidden; }
+  body.embedded .hero,
+  body.embedded .info { display: none !important; }
+  body.embedded .marquee-strip {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  /* --- Standalone mode (opened directly in a tab) --- */
+  body.standalone .marquee-strip {
+    position: sticky; top: 0; z-index: 10;
+    padding: 14px 0;
+  }
+  /* Smaller text in standalone so the strip feels like a banner, not a bus. */
+  body.standalone .marquee__word { font-size: clamp(32px, 5.5vw, 72px); }
+  body.standalone .marquee__star {
+    width: clamp(20px, 3.2vw, 44px);
+    height: clamp(20px, 3.2vw, 44px);
+  }
+
+  .hero {
+    padding: 96px 40px 64px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a4cb8;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 104px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    margin: 0 0 24px;
+  }
+  .hero p {
+    font-size: 18px;
+    line-height: 1.55;
+    color: #5a3f8c;
+    max-width: 620px;
+    margin: 0;
+  }
+
+  .info {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 40px 240px;
+  }
+  .info section { margin: 0 0 80px; }
+  .info h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+  .info p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: #4a3478;
+    margin: 0 0 12px;
+  }
+  .scroll-hint {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #cbaaf6;
+    color: #3d1a6f;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 </style>
 </head>
 <body>
+
+<header class="hero">
+  <span class="hero-eyebrow">Reference #006 · Background</span>
+  <h1>Marquee banner.</h1>
+  <p>A horizontal scrolling banner that reacts to the direction you scroll the page. Scroll down — it drifts left. Scroll up — it reverses and drifts right. Stop — it resumes its idle leftward drift.</p>
+</header>
+
+<div class="marquee-strip">
   <div class="marquee" id="marquee">
-    <!-- Each track has 6 word+star pairs so a single track is reliably wider
-         than the viewport at any tile size. Two tracks duplicated so the
-         loop at xPercent:-50 lands on a pixel-identical position. -->
     <div class="marquee__track">
       <span class="marquee__word">Design</span>
       <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
@@ -79,15 +163,61 @@
       <svg class="marquee__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
     </div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script>
-    gsap.to("#marquee", {
-      xPercent: -50,
-      duration: 28,
-      ease: "none",
-      repeat: -1,
-    });
-  </script>
+<main class="info">
+  <section>
+    <span class="scroll-hint">Keep scrolling</span>
+  </section>
+  <section>
+    <h2>Scroll-aware motion.</h2>
+    <p>The marquee runs continuously at an idle drift to the left. As you scroll, it picks up the rhythm of your reading: scrolling down accelerates the drift in the same direction; scrolling up reverses it.</p>
+    <p>This subtle responsiveness makes the marquee feel like part of the page rather than an autonomous decoration. The strip becomes a tactile element that reflects your pace and direction.</p>
+  </section>
+  <section>
+    <h2>How it works.</h2>
+    <p>A GSAP timeline drives the marquee's horizontal position on an infinite loop. On every scroll event, the <code>timeScale</code> of that timeline is set to +1 or -1 based on the sign of the scroll delta — the underlying animation does the rest.</p>
+    <p>A short timeout resets the direction to the default (forward) when scrolling stops, so the marquee always idles in one consistent direction rather than freezing wherever the user happened to stop.</p>
+  </section>
+  <section>
+    <h2>When to use this.</h2>
+    <p>Top-of-page brand ribbons that feel alive without demanding attention. Footers that punctuate a long page. Section dividers between distinct content areas. Hero accents that hint at motion before the user even hovers anything.</p>
+  </section>
+  <section>
+    <h2>Where it loses its charm.</h2>
+    <p>When the words inside are the actual primary message — readers can't read scrolling text comfortably. Use it for atmosphere and rhythm, not for content that needs to be parsed.</p>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script>
+  // Detect embed vs standalone. In the library iframe window.self !== window.top.
+  const isStandalone = window.self === window.top;
+  document.body.classList.add(isStandalone ? "standalone" : "embedded");
+
+  // Always set up the infinite-loop timeline. In embedded mode it just runs.
+  // In standalone mode its timeScale is driven by scroll direction below.
+  const tl = gsap.to("#marquee", {
+    xPercent: -50,
+    duration: 28,
+    ease: "none",
+    repeat: -1,
+  });
+
+  if (isStandalone) {
+    let lastY = window.scrollY;
+    let idleTimer = null;
+
+    window.addEventListener("scroll", () => {
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      if (dy > 0) tl.timeScale(1);        // down -> forward (drift left)
+      else if (dy < 0) tl.timeScale(-1);  // up   -> reverse  (drift right)
+
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => tl.timeScale(1), 800);
+    }, { passive: true });
+  }
+</script>
 </body>
 </html>

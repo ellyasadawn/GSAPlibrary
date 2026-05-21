@@ -68,9 +68,10 @@ function createTile(entry) {
 
   const meta = document.createElement("div");
   meta.className = "tile-meta";
+  const animationPath = `references/${entry.id}/animation.html`;
   meta.innerHTML = `
-    <span class="tile-name">${escapeHTML(entry.name)}</span>
-    <a class="tile-source" href="${escapeHTML(safeHref(entry.source))}" target="_blank" rel="noopener">↗</a>
+    <a class="tile-name" href="${escapeHTML(animationPath)}" target="_blank" rel="noopener" title="Open full preview">${escapeHTML(entry.name)}</a>
+    <a class="tile-source" href="${escapeHTML(safeHref(entry.source))}" target="_blank" rel="noopener" title="View original source">↗</a>
   `;
 
   tile.appendChild(frameContainer);
