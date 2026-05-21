@@ -75,10 +75,11 @@ function createTile(entry) {
 }
 
 function renderGrid() {
-  const grid = document.getElementById("grid");
-  // Release the previous observer before mutating the grid so detached
-  // tiles don't leak as live observed targets.
+  // Tear down current tab's iframes and observer before re-rendering.
   if (intersectionObserver) intersectionObserver.disconnect();
+  unmountAllIframes();
+
+  const grid = document.getElementById("grid");
   grid.innerHTML = "";
 
   const entries = REFERENCES.filter(r => r.category === activeCategory);
