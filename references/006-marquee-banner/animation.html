@@ -195,42 +195,42 @@
   const isStandalone = window.self === window.top;
   document.body.classList.add(isStandalone ? "standalone" : "embedded");
 
-  // Infinite horizontal scroll for the marquee container.
-  const marqueeTl = gsap.to("#marquee", {
-    xPercent: -50,
-    duration: 28,
-    ease: "none",
-    repeat: -1,
-  });
-
-  // Stars continuously rotate. The rotation direction follows the marquee
-  // direction so a flip in scroll direction also flips the spin direction —
-  // this is the bit that makes the response read as fluid instead of mechanical.
-  const stars = document.querySelectorAll(".marquee__star");
-  let targetDir = 1;     // 1 = forward (left drift), -1 = reverse (right drift)
-  let currentDir = 1;    // lerps toward targetDir so reversal feels smooth
-  let starAngle = 0;     // accumulated rotation in degrees
-
-  gsap.ticker.add(() => {
-    const dRatio = gsap.ticker.deltaRatio(); // ~1 at 60fps; ~2 at 30fps
-    // Lerp the direction so changes ease in/out rather than snap.
-    currentDir += (targetDir - currentDir) * 0.06 * dRatio;
-    marqueeTl.timeScale(currentDir);
-    // 60 deg/sec at full speed; mid-flip the stars naturally slow to a stop,
-    // then accelerate the other way.
-    starAngle += currentDir * 1.0 * dRatio;
-    gsap.set(stars, { rotation: starAngle, transformOrigin: "50% 50%" });
-  });
+  const marquee = document.getElementById("marquee");
 
   if (isStandalone) {
-    let lastY = window.scrollY;
-    window.addEventListener("scroll", () => {
-      const dy = window.scrollY - lastY;
-      lastY = window.scrollY;
-      if (dy > 0) targetDir = 1;        // down -> forward (drift left, spin CW)
-      else if (dy < 0) targetDir = -1;  // up   -> reverse  (drift right, spin CCW)
-      // No idle reset — direction persists until you scroll the other way.
-    }, { passive: true });
+    // Standalone: the marquee's horizontal position is a pure function of the
+    // page scroll. No autoplay — the strip only moves when you scroll, and
+    // it shifts back the other way when you scroll up. Stop scrolling and
+    // the strip stops. This is what makes the original feel "tactile".
+
+    const FACTOR = 1.6; // marquee pixels per pixel of scroll
+
+    // ((n % m) + m) % m  — JS % can return negative; this keeps it in [0, m).
+    const mod = (n, m) => ((n % m) + m) % m;
+
+    function update() {
+      // offsetWidth of one track (incl. its padding-right) IS the distance the
+      // marquee must travel for the duplicate track to land where it started.
+      const trackWidth = marquee.firstElementChild.offsetWidth;
+      if (!trackWidth) return;
+      const x = -mod(window.scrollY * FACTOR, trackWidth);
+      gsap.set(marquee, { x });
+    }
+
+    // Update on scroll (passive for perf) and once on load after fonts settle.
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("load", update);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+    update();
+  } else {
+    // Embedded: the iframe can't be scrolled, so fall back to a simple
+    // infinite autoplay loop just to show the effect at a glance.
+    gsap.to(marquee, {
+      xPercent: -50,
+      duration: 28,
+      ease: "none",
+      repeat: -1,
+    });
   }
 </script>
 </body>
