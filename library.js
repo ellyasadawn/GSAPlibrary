@@ -28,9 +28,13 @@ function setActiveCategory(category) {
   renderGrid();
 }
 
-function renderEntryCount() {
-  document.getElementById("entry-count").textContent =
-    `${REFERENCES.length} reference${REFERENCES.length === 1 ? "" : "s"}`;
+function renderEntryCount(override) {
+  const el = document.getElementById("entry-count");
+  if (override !== undefined) {
+    el.textContent = override;
+    return;
+  }
+  el.textContent = `${REFERENCES.length} reference${REFERENCES.length === 1 ? "" : "s"}`;
 }
 
 function escapeHTML(str) {
@@ -138,6 +142,7 @@ function setupSearch() {
   input.addEventListener("input", e => {
     const query = e.target.value.trim().toLowerCase();
     if (!query) {
+      renderEntryCount();  // restore default
       renderGrid();
       return;
     }
@@ -168,6 +173,8 @@ function renderSearchResults(query) {
   grid.innerHTML = "";
 
   const matches = REFERENCES.filter(r => matchesQuery(r, query));
+
+  renderEntryCount(`${matches.length} match${matches.length === 1 ? "" : "es"} for "${query}"`);
 
   if (matches.length === 0) {
     const empty = document.createElement("div");
